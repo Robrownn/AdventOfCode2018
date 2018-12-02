@@ -19,6 +19,12 @@ namespace src
 
             var checksum = twoLetters.Count() * threeLetters.Count();
             Console.WriteLine(checksum);
+
+            var differByOne = SelectDifferByOne(lines);
+            foreach (var item in differByOne)
+            {
+                Console.WriteLine(ConstructCommon(item.Key, item.Value));
+            }
         }
 
         static List<string> SelectDuplicates(string[] lines, Func<IGrouping<char, char>, bool> predicate)
@@ -27,13 +33,54 @@ namespace src
 
             foreach (string line in lines)
             {
-                var wtf = line.GroupBy(x => x)
+                var query = line.GroupBy(x => x)
                     .Where(predicate)
                     .Any();
 
-                if (wtf)
+                if (query)
                     result.Add(line);
 
+            }
+
+            return result;
+        }
+
+        static string ConstructCommon(string source, string target)
+        {
+            List<char> memes = new List<char>();
+            for (int i = 0; i < source.Length; i++)
+            {
+                if (source[i] == target[i])
+                    memes.Add(source[i]);
+            }
+            return string.Concat(memes);
+        }
+
+        static Dictionary<string, string> SelectDifferByOne(string[] lines)
+        {
+            Dictionary<string, string> result = new Dictionary<string, string>();
+            for (int i = 0; i < lines.Length; i++)
+            {
+                var source = lines[i];
+                for (int j = i + 1; j < lines.Length; j++)
+                {
+                    var target = lines[j];
+
+                    if (CharacterDifference(source, target) == 1)
+                        result.Add(source, target);
+                }
+            }
+
+            return result;
+        }
+
+        static int CharacterDifference(string s1, string s2)
+        {
+            int result = 0;
+            for (int i = 0; i < s1.Length; i++)
+            {
+                if (!(s1[i] == s2[i]))
+                    result++;
             }
 
             return result;
