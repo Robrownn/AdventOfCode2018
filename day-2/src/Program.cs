@@ -39,7 +39,6 @@ namespace src
 
                 if (query)
                     result.Add(line);
-
             }
 
             return result;
