@@ -1,13 +1,22 @@
 {
     "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "build",
+    "tasks": [{
+            "label": "build-day2",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
                 "${workspaceFolder}/day-2/src/src.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-day3",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/day-3/src/partOne/partOne.csproj"
             ],
             "problemMatcher": "$msCompile"
         }
