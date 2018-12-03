@@ -8,37 +8,67 @@ namespace partOne
 {
     class Program
     {
+
         static void Main(string[] args)
         {
             string pattern = "\\d+";
             string[] lines = File.ReadAllLines(@"./input.txt");
-            List<ElfClaim> elfClaims = new List<ElfClaim>();
+            List<Rect> rectangles = new List<Rect>();
+            List<int> xCoords = new List<int>();
+            List<int> yCoords = new List<int>();
+
             foreach (var line in lines)
             {
-                elfClaims.Add(LineToElfClaim(line, pattern));
+                var newRect = LineToRect(line, pattern);
+                xCoords.Add(newRect.posX);
+                yCoords.Add(newRect.posY);
+                
+                rectangles.Add(newRect);
             }
+
+            xCoords.Sort();
+            xCoords.ToArray();
         }
 
-        static ElfClaim LineToElfClaim(string line, string pattern)
+        static Rect LineToRect(string line, string pattern)
         {
             var numbers = Regex.Matches(line, pattern, RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500));
 
-            return new ElfClaim
+            return new Rect
             {
-                id = Int32.Parse(numbers[0].Value),
-                    fromLeft = Int32.Parse(numbers[1].Value),
-                    fromTop = Int32.Parse(numbers[2].Value),
-                    length = Int32.Parse(numbers[3].Value),
-                    width = Int32.Parse(numbers[4].Value)
+                posX = Int32.Parse(numbers[1].Value),
+                posY = Int32.Parse(numbers[2].Value),
+                length = Int32.Parse(numbers[3].Value),
+                width = Int32.Parse(numbers[4].Value)
             };
+        }
+
+        static void Sweep(int[] xCoords, List<Rect> rectangles)
+        {
+            List<int> yCoords = new List<int>();
+            for (int i = 0; i < xCoords.Length; i++)
+            {
+                var x = xCoords[i];
+                var rectanglesStartOnX = rectangles.Where(r => r.posX == x);
+                var rectanglesEndOnX = rectangles.Where(r => r.posX + (r.length -1) == x);
+
+                foreach(var rect in rectanglesStartOnX)
+                {
+                    yCoords.Add(rect.posY);
+                }
+
+                foreach(var rect in rectanglesEndOnX)
+                {
+                    yCoords.Remove(rect.posY);
+                }
+            }
         }
     }
 
-    struct ElfClaim
+    struct Rect
     {
-        public int id { get; set; }
-        public int fromLeft { get; set; }
-        public int fromTop { get; set; }
+        public int posX { get; set; }
+        public int posY { get; set; }
         public int length { get; set; }
         public int width { get; set; }
     }
