@@ -27,7 +27,7 @@ namespace partOne
             }
 
             xCoords.Sort();
-            xCoords.ToArray();
+            Sweep(xCoords.ToArray(), rectangles);
         }
 
         static Rect LineToRect(string line, string pattern)
